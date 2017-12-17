@@ -2,13 +2,24 @@
 #include "VectorList.h"
 int main() {
 
+
+    std::pair<std::vector<int>::iterator,int> y;
     VectorList<int> a;
-    std::vector<int> v1={1,2,3,4};
-    std::vector<int> v2={4,5,6,7,4,88};
+    std::vector<int> v1={1,2};
+    std::vector<int> v2={31,2,4};
 
     a.append(v1.begin(),v1.end());
     a.append(v2.begin(),v2.end());
 
-    std::cout<<a.size()<<std::endl;
+
+    VectorList<int>::const_iterator it;
+    VectorList<int>::const_reverse_iterator rit;
+
+    rit= a.rbegin();
+
+    for (rit = a.rbegin(); rit != a.rend(); ++rit)
+    std::cout<< (*rit)<<std::endl;
+
+
     return 0;
 }
