@@ -39,7 +39,7 @@ public:
             data_.push_back(VectT(p, q));
     }
 
-//    bool empty() const { return size() == 0; }
+    bool empty() const { return size() == 0; }
 
     // определите метод size
     size_t size() const {
@@ -50,45 +50,72 @@ public:
         return __size;
     }
 
-//
-//    // определите const_iterator
+// определите const_iterator
     class const_iterator {
     public:
         typedef const_iterator self_type;
         typedef T value_type;
         typedef const T &reference;
-        typedef T *pointer;
+        typedef const T *pointer;
         typedef int difference_type;
         typedef std::pair<typename ListT::const_iterator, typename VectT::const_iterator> iterator_pair;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef std::bidirectional_iterator_tag iterator_category;
 
-        reference operator*() const {
-            typename VectT::const_iterator  __it = position.second;
-            return *__it;
-        }
+        const reference operator*() const { return *(position.second); }
 
-        self_type operator++() {
-            typename ListT::const_iterator & __list_it = position.first;
-            typename VectT::const_iterator & __vec_it = position.second;
+        const pointer operator->() const { return position.second.operator->(); }
+
+
+        self_type &operator++() {
+            typename ListT::const_iterator &__list_it = position.first;
+            typename VectT::const_iterator &__vec_it = position.second;
 
             __vec_it++;
-            if (__vec_it == __list_it->end()){
+            if (__vec_it == __list_it->end()) {
                 __list_it++;
                 __vec_it = __list_it->begin();
             }
             return *this;
 
         }
-        bool operator!=(const self_type& rhs)
-        { return position != rhs.position; }
+
+        self_type operator++(int) {
+            self_type temp = *this;
+            ++*this;
+            return temp;
+        }
+
+        self_type &operator--() {
+            typename ListT::const_iterator &__list_it = position.first;
+            typename VectT::const_iterator &__vec_it = position.second;
+
+            if (__vec_it == __list_it->begin()) {
+                __list_it--;
+                __vec_it = __list_it->end();
+            }
+            __vec_it--;
+
+            return *this;
+
+        }
+
+        self_type operator--(int) {
+            self_type temp = *this;
+            --*this;
+            return temp;
+        }
+
+        bool operator!=(const self_type &rhs) const { return position != rhs.position; }
+
+        bool operator==(const self_type &rhs) const { return position == rhs.position; }
 
         const_iterator() {
             typename ListT::const_iterator __list_it;
             typename VectT::const_iterator __vec_it;
-            position = iterator_pair(__list_it,__vec_it);
+            position = iterator_pair(__list_it, __vec_it);
         };
 
-        const_iterator(const const_iterator & __other) {
+        const_iterator(const const_iterator &__other) {
             position = __other.position;
         };
 
@@ -103,34 +130,28 @@ public:
     const_iterator begin() const {
         typename ListT::const_iterator __first_it = data_.begin();
         typename VectT::const_iterator __second_it = __first_it->begin();
-        return const_iterator(__first_it,__second_it);
+        return const_iterator(__first_it, __second_it);
     }
 
     const_iterator end() const {
         typename ListT::const_iterator __last_it_list = data_.end();
         typename VectT::const_iterator __last_vector_it = __last_it_list->begin();
-        return const_iterator(__last_it_list,__last_vector_it);
+        return const_iterator(__last_it_list, __last_vector_it);
     }
 
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 
     const_reverse_iterator rbegin() const {
-        typename ListT::const_iterator __first_it = data_.begin();
-        typename VectT::const_iterator __second_it = __first_it->begin();
-
-        return const_reverse_iterator(const_iterator(__first_it,__second_it));
+        return std::reverse_iterator<const_iterator>(end());
     }
 
     const_reverse_iterator rend() const {
-        typename ListT::const_iterator __last_it_list = data_.end();
-        typename VectT::const_iterator __last_vector_it = __last_it_list->begin();
-        return const_reverse_iterator(const_iterator(__last_it_list,__last_vector_it));
+        return std::reverse_iterator<const_iterator>(begin());
     }
 
 private:
     ListT data_;
 };
-
 
 #endif //TASK_1_VECTORLIST_H

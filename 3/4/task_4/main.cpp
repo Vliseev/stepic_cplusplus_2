@@ -8,6 +8,8 @@ int main() {
     std::vector<int> v1={1,2};
     std::vector<int> v2={31,2,4};
 
+
+    std::cout<<"is empty"<<a.empty();
     a.append(v1.begin(),v1.end());
     a.append(v2.begin(),v2.end());
 
@@ -17,9 +19,12 @@ int main() {
 
     rit= a.rbegin();
 
-    for (rit = a.rbegin(); rit != a.rend(); ++rit)
-    std::cout<< (*rit)<<std::endl;
+    for (rit = a.rbegin(); rit != a.rend();) {
+        std::cout << (*rit) << std::endl;
+        ++rit;
+    }
 
+    std::cout<<"is empty"<<a.empty();
 
     return 0;
 }
